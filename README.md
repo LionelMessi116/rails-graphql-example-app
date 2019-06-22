@@ -1,24 +1,49 @@
-# README
+# Rails Graphql API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Getting started
 
-Things you may want to cover:
+## Install rvm/rbenv, ruby, rails
 
-* Ruby version
+## Clone repository
 
-* System dependencies
+```
+git clone git@github.com:Aristat/rails-graphql-example-app.git
+```
 
-* Configuration
+## Start
 
-* Database creation
+```
+rake db:create
+rake db:migrate
+rake db:seed
 
-* Database initialization
+bundle exec rails s -p 3000
 
-* How to run the test suite
+localhost:3000/graphiql
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+Generate token for auth
 
-* Deployment instructions
+```
+bin/rails c
+JWTWrapper.generate_user_token(User.last)
+```
 
-* ...
+this token set in headers - 
+
+```
+{
+  "Authorization": "bearer example_token_from_console"
+}
+```
+
+Examples queries in fixtures/graphql/*
+
+## Testing
+```
+RAILS_ENV=test rspec spec/
+```
+
+## Programs for testing
+
+https://github.com/prisma/graphql-playground - for easy query writing
