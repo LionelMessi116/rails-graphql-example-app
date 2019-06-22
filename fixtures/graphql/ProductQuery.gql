@@ -1,0 +1,13 @@
+query productBlock($productId: ID!) {
+  product(id: $productId) {
+    name
+    typeObject
+    itemsCount
+    productItems {
+      nodes {
+        color
+        price
+      }
+    }
+  }
+}
