@@ -37,7 +37,7 @@ this token set in headers -
 }
 ```
 
-Examples queries in fixtures/graphql/*
+Examples queries and mutations in fixtures/graphql/*
 
 ## Testing
 ```

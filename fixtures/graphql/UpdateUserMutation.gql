@@ -1,0 +1,9 @@
+mutation updateUser($userInput: UserInput) {
+  updateUser(userInput: $userInput) {
+    ok
+    errors {
+      message
+      type
+    }
+  }
+}

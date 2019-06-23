@@ -1,10 +1,12 @@
 module Types
   class MutationType < BaseTypes::BaseObject
-    # TODO: remove me
-    field :test_field, String, null: false,
-      description: "An example field added by the generator"
-    def test_field
-      "Hello World"
+
+    with_options guard: GraphQlPolicy::AUTHENTICATED do
+      {
+        update_user: Mutations::UpdateUser
+      }.each do |name, mutation|
+        field name, mutation: mutation
+      end
     end
   end
 end
