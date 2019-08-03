@@ -13,13 +13,24 @@ git clone git@github.com:Aristat/rails-graphql-example-app.git
 ## Start
 
 ```
-rake db:create
-rake db:migrate
-rake db:seed
+bin/rails db:create
+bin/rails db:migrate
+bin/rails db:seed
 
 bundle exec rails s -p 3000
 
 localhost:3000/graphiql
+```
+
+Code structure
+
+```
+.
+├── fixtures                            // fixtures for specs
+├── db                                  // migrations and seeds for DB
+└── app
+    ├── graphql                         // graphql logic
+    └── controllers/graphql_controller  // graphql action with jwt auth
 ```
 
 Generate token for auth
@@ -36,8 +47,6 @@ this token set in headers -
   "Authorization": "bearer example_token_from_console"
 }
 ```
-
-Examples queries and mutations in fixtures/graphql/*
 
 ## Testing
 ```
