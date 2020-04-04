@@ -26,7 +26,8 @@ commands:
             - vendor/bundle
 
 jobs:
-  backend_unit_tests:
+  rspec_tests:
+    parallelism: 2
     docker:
       - image: circleci/ruby:2.5.1-stretch-node
         environment:
