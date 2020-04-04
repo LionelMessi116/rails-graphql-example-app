@@ -4,6 +4,7 @@ class GraphqlController < ActionController::API
   class UnexpectedVariables < ArgumentError; end
 
   def execute
+    p 'current_user', current_user
     context = GQL::BuildUserContext.call(current_user, guest).merge(
       referer: request.referer,
     )

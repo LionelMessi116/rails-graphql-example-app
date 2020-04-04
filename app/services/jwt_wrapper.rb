@@ -3,7 +3,9 @@
 module JWTWrapper
 
   EXPIRATION_HOURS = 24.hours
-  SECRET_KEY = Rails.application.credentials.secret_key_base
+  # Just for test
+  # SecureRandom.uuid
+  SECRET_KEY = "730df807-74ff-430d-8fd5-dc9819c179a6"
 
   class << self
     def encode(payload)
