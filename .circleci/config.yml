@@ -70,4 +70,4 @@ workflows:
   version: 2
   commit_jobs:
     jobs:
-      - backend_unit_tests
+      - rspec_tests
