@@ -1,0 +1,73 @@
+version: 2.1
+
+commands:
+  bundle-install:
+    description: "Install bundler and gems"
+    parameters:
+      cache_key_prefix:
+        type: string
+        default: bundle-cache
+        description: "Parameter for CircleCI cache key prefix"
+    steps:
+      - run:
+          name: Install bundler
+          command: gem install bundler
+      - restore_cache:
+          name: Bundle restore cache
+          keys:
+            - << parameters.cache_key_prefix >>-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle install
+          command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=3 --retry=3
+      - save_cache:
+          name: Bundle save cache
+          key: << parameters.cache_key_prefix >>-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+jobs:
+  rspec_tests:
+    parallelism: 2
+    docker:
+      - image: circleci/ruby:2.5.1-stretch-node
+        environment:
+          RAILS_ENV: test
+          DB_USERNAME: postgres
+          DB_PASSWORD: password
+          DATABASE_URL: postgres://postgres:password@localhost:5432/graphql_example_test
+      - image: circleci/postgres:9.6
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: graphql_example_test
+    steps:
+      - checkout
+      - bundle-install
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          command: bundle exec rake db:create db:schema:load --trace
+      - run:
+          name: Run rspec
+          command: |
+            circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings > /tmp/tests-to-run
+            bundle exec rspec -r rspec_junit_formatter \
+                              --format progress \
+                              --format RspecJunitFormatter \
+                              --profile -o results/rspec/junit.xml \
+                              $(cat /tmp/tests-to-run)
+      - run:
+          name: Specs suite details
+          command:
+            cat /tmp/tests-to-run | xargs
+          when: on_fail
+      # Save test results for timing analysis
+      - store_test_results:
+          path: results
+
+workflows:
+  version: 2
+  commit_jobs:
+    jobs:
+      - rspec_tests
