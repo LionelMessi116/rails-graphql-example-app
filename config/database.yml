@@ -9,3 +9,6 @@ test:
   database: graphql_example_test
   encoding: utf8
   pool: 5
+<% if ENV['DATABASE_URL'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+<% end %>
