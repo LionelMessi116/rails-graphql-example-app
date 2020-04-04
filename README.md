@@ -19,7 +19,7 @@ bin/rails db:seed
 
 bundle exec rails s -p 3000
 
-localhost:3000/graphiql
+localhost:3000/graphql
 ```
 
 Code structure
@@ -45,6 +45,45 @@ this token set in headers -
 ```
 {
   "Authorization": "bearer example_token_from_console"
+}
+```
+
+## Queries/Mutations
+
+```cassandraql
+query userProfile {
+  userProfile {
+    id
+    name
+  }
+}
+```
+
+```
+mutation updateUser($userInput: UserInput) {
+  updateUser(userInput: $userInput) {
+    ok
+    errors {
+      message
+      type
+    }
+  }
+}
+```
+
+```cassandraql
+query productBlock($productId: ID!) {
+  product(id: $productId) {
+    name
+    typeObject
+    itemsCount
+    productItems {
+      nodes {
+        color
+        price
+      }
+    }
+  }
 }
 ```
 
